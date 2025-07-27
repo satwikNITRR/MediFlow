@@ -1,6 +1,7 @@
 import tensorflow as tf
 from pathlib import Path
 import mlflow
+# if normal ML project hota then mlflow.sckit-learn wageera import karna hota
 import mlflow.keras
 from urllib.parse import urlparse
 from cnnClassifier.entity.config_entity import EvaluationConfig
@@ -11,7 +12,6 @@ class Evaluation:
     def __init__(self, config: EvaluationConfig):
         self.config = config
 
-    
     def _valid_generator(self):
 
         datagenerator_kwargs = dict(
@@ -36,12 +36,10 @@ class Evaluation:
             **dataflow_kwargs
         )
 
-
     @staticmethod
     def load_model(path: Path) -> tf.keras.Model:
         return tf.keras.models.load_model(path)
     
-
     def evaluation(self):
         self.model = self.load_model(self.config.path_of_model)
         self._valid_generator()
@@ -64,6 +62,7 @@ class Evaluation:
             )
             # local system pe model registry won't work
             if tracking_url_type_store != "file":
+                # for normal ML projects just import mlflow.scikit-learn instread of mlflow.keras
                 mlflow.keras.log_model(self.model, "model", registered_model_name="VGG16Model")
             else:
                 mlflow.keras.log_model(self.model, "model")
